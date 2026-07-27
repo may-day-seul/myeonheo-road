@@ -1,6 +1,9 @@
 import bank from '../data/bank.json'
+import { areaOf, areaQuestionIds, weakAreas } from './areas.js'
 
 export const QUIZ_SIZE = 10
+// 오늘의 퀴즈 10문항 중 취약 영역에서 채우는 몫
+export const WEAK_SLOTS = 3
 export const PASS_SCORE = 60
 
 // 실전 모의고사: 40문항 40분
@@ -33,18 +36,55 @@ function applyFilter(pool, filter) {
   return pool
 }
 
-// 아직 풀지 않은 문항을 먼저 소진해 1,000문항을 한 바퀴 돌게 한다.
-// 남은 미출제 문항이 모자라면 기출제 문항으로 채운다.
+// 미출제 문항을 먼저, 그다음 오답 이력이 많은 문항을 우선한다.
+function byPriority(pool, progress) {
+  const solved = new Set(progress.solvedIds)
+  const attempts = progress.attempts ?? {}
+  const fresh = pool.filter((q) => !solved.has(q.i))
+  const missed = pool.filter((q) => solved.has(q.i) && (attempts[q.i]?.w ?? 0) > 0)
+  const rest = pool.filter((q) => solved.has(q.i) && !(attempts[q.i]?.w > 0))
+  return [...shuffle(fresh), ...shuffle(missed), ...shuffle(rest)]
+}
+
+// 아직 풀지 않은 문항을 먼저 소진해 1,000문항을 한 바퀴 돌게 하되,
+// 취약 영역이 드러났으면 그 영역에서 WEAK_SLOTS만큼 먼저 채운다.
 export function pickDaily(progress, filter, size = QUIZ_SIZE) {
   const pool = applyFilter(bank, filter)
-  const solved = new Set(progress.solvedIds)
-  const picked = shuffle(pool.filter((q) => !solved.has(q.i))).slice(0, size)
-  if (picked.length < size) {
-    const seen = new Set(picked.map((q) => q.i))
-    const filler = shuffle(pool.filter((q) => !seen.has(q.i)))
-    picked.push(...filler.slice(0, size - picked.length))
+  const picked = []
+  const taken = new Set()
+
+  const weak = weakAreas(progress, 2).map((a) => a.code)
+  if (weak.length > 0) {
+    const weakPool = pool.filter((q) => weak.includes(areaOf(q.i)))
+    for (const q of byPriority(weakPool, progress)) {
+      if (picked.length >= Math.min(WEAK_SLOTS, size)) break
+      picked.push(q)
+      taken.add(q.i)
+    }
+  }
+
+  for (const q of byPriority(pool, progress)) {
+    if (picked.length >= size) break
+    if (taken.has(q.i)) continue
+    picked.push(q)
+    taken.add(q.i)
   }
   return shuffle(picked)
+}
+
+// 특정 영역만 출제한다. 틀린 적 있는 문항과 미출제 문항을 먼저 보여준다.
+export function pickArea(progress, code, size = QUIZ_SIZE) {
+  const ids = new Set(areaQuestionIds(code))
+  const pool = bank.filter((q) => ids.has(q.i))
+  const attempts = progress.attempts ?? {}
+  const solved = new Set(progress.solvedIds)
+  const missed = pool.filter((q) => (attempts[q.i]?.w ?? 0) > 0)
+  const fresh = pool.filter((q) => !solved.has(q.i) && !(attempts[q.i]?.w > 0))
+  const rest = pool.filter(
+    (q) => solved.has(q.i) && !(attempts[q.i]?.w > 0),
+  )
+  const ordered = [...shuffle(missed), ...shuffle(fresh), ...shuffle(rest)]
+  return shuffle(ordered.slice(0, size))
 }
 
 // 모의고사는 실제 시험처럼 전 범위에서 무작위로 뽑는다(유형 필터·학습 이력 무시).

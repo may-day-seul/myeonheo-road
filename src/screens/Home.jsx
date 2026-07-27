@@ -1,5 +1,6 @@
 import RoadProgress from '../components/RoadProgress.jsx'
 import { SECTIONS } from './Practical.jsx'
+import { MIN_ATTEMPTS, weakAreas } from '../lib/areas.js'
 import bank from '../data/bank.json'
 
 const PRACTICAL_TOTAL = SECTIONS.reduce((n, s) => n + s.items.length, 0)
@@ -12,6 +13,7 @@ const FILTERS = [
 
 const MENU = [
   { id: 'review', icon: '📝', label: '오답노트 복습' },
+  { id: 'areas', icon: '🎯', label: '영역별 학습' },
   { id: 'practical', icon: '🚙', label: '실기 체크리스트' },
   { id: 'mock', icon: '⏱️', label: '실전 모의고사', note: '40문항 · 40분' },
 ]
@@ -28,6 +30,11 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
   const conquered = progress.solvedIds.length
   const conqueredPct = Math.round((conquered / bank.length) * 100)
   const practicalDone = progress.practicalDone.length
+  const weak = weakAreas(progress, 3)
+  const attemptCount = Object.values(progress.attempts ?? {}).reduce(
+    (n, r) => n + r.n,
+    0,
+  )
 
   return (
     <div className="home">
@@ -80,6 +87,42 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
           <span>%</span>
         </div>
         <RoadProgress current={conquered} total={bank.length} />
+      </section>
+
+      <section className="card">
+        <div className="section-title">
+          취약 영역
+          <span className="sub">오답률 높은 순</span>
+        </div>
+        {weak.length > 0 ? (
+          <div className="weak-list">
+            {weak.map((a) => (
+              <button
+                key={a.code}
+                className="weak-row"
+                onClick={() => onNavigate({ screen: 'area', code: a.code })}
+              >
+                <span className="area-ico">{a.icon}</span>
+                <span className="area-main">
+                  <span className="area-name">{a.name}</span>
+                  <span className="area-bar">
+                    <span
+                      className="area-fill"
+                      style={{ width: `${Math.max(3, a.rate * 100)}%` }}
+                    />
+                  </span>
+                </span>
+                <span className="weak-rate">{Math.round(a.rate * 100)}%</span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className="weak-empty">
+            {attemptCount === 0
+              ? '문제를 풀면 어느 영역에 약한지 알려드릴게요.'
+              : `조금 더 풀어야 해요. 영역마다 ${MIN_ATTEMPTS}회 이상 풀면 오답률이 표시됩니다.`}
+          </p>
+        )}
       </section>
 
       <nav className="menu-list">

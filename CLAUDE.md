@@ -95,10 +95,16 @@ npm create vite@latest . -- --template react
 도로주행: 차로변경 루틴(깜빡이→거울→어깨너머) / 교차로 황색신호 대응 / 시험 코스 사전 답사 /
 제한속도 -5km 유지 / 종료 시 기어 P·사이드·시동 순서
 
-### 저장 (localStorage, 키 `dl2-progress-v3`)
+### 저장 (localStorage, 키 `dl2-progress-v4`)
 ```ts
-{ streak, lastDate, total, correct, wrongIds:number[], solvedIds:number[], practicalDone:string[] }
+{ streak, lastDate, total, correct, wrongIds:number[], solvedIds:number[],
+  practicalDone:string[],
+  attempts: { [문항번호]: { n:시도횟수, w:오답횟수 } } }
 ```
+- `attempts`는 영역별 오답률의 근거다. `wrongIds`는 '지금 틀린 상태'만 담고
+  다시 맞히면 빠지므로 누적 집계가 따로 필요하다.
+- v3 데이터는 첫 로드 시 자동 이관된다(푼 문항=1회 시도, 현재 오답=1회 오답).
+  v3 키는 지우지 않는다.
 - 스트릭: `lastDate`가 어제면 +1, 그 이전이면 1로 리셋. 같은 날 재도전은 스트릭 유지.
 - 출제: `solvedIds`에 없는 문항 우선 → 1,000문항을 한 바퀴 돌게 만든다.
 
@@ -107,6 +113,15 @@ npm create vite@latest . -- --template react
 2. **실전 모의고사 모드** — 40문항·40분 타이머, 60점 합격 판정.
    배점은 문장형 2점·이미지형 3점으로 근사하되, **정확한 공식 배점이 아니므로**
    `SCORE_WEIGHTS` 상수로 분리하고 "추정 배점" 주석과 UI 문구를 남길 것.
+3. **취약 영역 진단 + 영역별 학습** — 문항을 7개 영역으로 나눠 오답률을 집계하고,
+   약한 영역만 골라 풀 수 있게 한다.
+   - `bank.json`에 영역 정보가 **없다**. 법령명은 656/1000이 '도로교통법'이고
+     조문 번호는 449문항에만 있으며 문항 번호도 주제순이 아니다. 그래서
+     지문·해설 어휘로 **추정 분류**한다 — `tools/build-categories.py` →
+     `src/data/categories.json`. bank.json은 건드리지 않는다.
+   - 분류는 근사치이므로 화면에 "추정 분류" 문구를 남길 것.
+   - 영역별 표본이 `MIN_ATTEMPTS`(5회) 미만이면 오답률을 표시하지 않는다.
+   - 오늘의 퀴즈 10문항 중 `WEAK_SLOTS`(3)를 취약 영역에서 채운다.
 
 ## 완료 기준 (Definition of Done)
 - [ ] 1,000문항 전부 출제 가능, 이미지 문항 293장 모두 정상 표시(404 없음)

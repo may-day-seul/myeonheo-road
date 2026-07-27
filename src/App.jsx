@@ -6,9 +6,24 @@ import Result from './screens/Result.jsx'
 import Mock from './screens/Mock.jsx'
 import MockResult from './screens/MockResult.jsx'
 import Practical from './screens/Practical.jsx'
+import Areas from './screens/Areas.jsx'
 import Placeholder from './screens/Placeholder.jsx'
-import { load, save, bumpStreak, effectiveStreak } from './lib/storage.js'
-import { pickDaily, pickReview, pickMock, scoreMock, isCorrect } from './lib/quiz.js'
+import {
+  load,
+  save,
+  bumpStreak,
+  effectiveStreak,
+  addAttempts,
+} from './lib/storage.js'
+import {
+  pickDaily,
+  pickReview,
+  pickMock,
+  pickArea,
+  scoreMock,
+  isCorrect,
+} from './lib/quiz.js'
+import { areaName } from './lib/areas.js'
 
 export default function App() {
   const [progress, setProgress] = useState(load)
@@ -37,6 +52,7 @@ export default function App() {
       correct: p.correct + entries.filter((r) => r.correct).length,
       solvedIds: [...solved],
       wrongIds: [...wrong],
+      attempts: addAttempts(p.attempts, entries),
     })
     save(updated)
     setProgress(updated)
@@ -63,7 +79,15 @@ export default function App() {
     setScreen('mock')
   }
 
+  const startArea = (code) => {
+    setQuestions(pickArea(progress, code))
+    setQuizTitle(areaName(code))
+    setScreen('quiz')
+  }
+
+  // 메뉴는 문자열, 취약 영역 카드는 { screen: 'area', code }를 넘긴다.
   const navigate = (target) => {
+    if (typeof target === 'object') return startArea(target.code)
     if (target === 'quiz') return startDaily()
     if (target === 'review') return startReview()
     if (target === 'mock') return startMock()
@@ -132,6 +156,10 @@ export default function App() {
           onRetry={startMock}
           onHome={goHome}
         />
+      )}
+
+      {screen === 'areas' && (
+        <Areas progress={progress} onStart={startArea} onBack={goHome} />
       )}
 
       {screen === 'practical' && (

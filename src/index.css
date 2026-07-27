@@ -1455,3 +1455,161 @@ img {
   color: var(--dimmer);
   letter-spacing: -0.02em;
 }
+
+/* ---------- 영역별 학습 ---------- */
+.areas {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.area-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.area-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 15px;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.055) inset;
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.18s,
+    background 0.18s;
+}
+
+.area-row:hover {
+  transform: translateY(-1.5px);
+  border-color: var(--line-strong);
+  background: var(--surface-strong);
+}
+
+.area-row.dim .area-name,
+.area-row.dim .area-sub {
+  color: var(--dimmer);
+}
+
+.area-ico {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+}
+
+.area-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.area-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 640;
+  letter-spacing: -0.03em;
+}
+
+.area-flag {
+  font-size: 10px;
+  font-weight: 760;
+  color: #fff;
+  background: linear-gradient(140deg, #ff6b62, var(--red));
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+
+.area-bar {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.area-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--amber-deep), var(--red));
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.area-fill.muted {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.area-sub {
+  font-size: 11px;
+  font-weight: 480;
+  color: var(--dimmer);
+  letter-spacing: -0.015em;
+}
+
+/* 홈 취약 영역 카드 */
+.weak-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.weak-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  transition: opacity 0.16s;
+}
+
+.weak-row:hover {
+  opacity: 0.82;
+}
+
+.weak-row .area-ico {
+  width: 30px;
+  height: 30px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+.weak-row .area-name {
+  font-size: 13px;
+  font-weight: 620;
+}
+
+.weak-rate {
+  flex: none;
+  font-size: 14px;
+  font-weight: 780;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--amber);
+}
+
+.weak-empty {
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.6;
+  color: var(--dimmer);
+  letter-spacing: -0.018em;
+  word-break: keep-all;
+}
