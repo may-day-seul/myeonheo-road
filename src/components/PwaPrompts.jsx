@@ -32,9 +32,15 @@ export default function PwaPrompts() {
       setDeferred(e)
     }
     window.addEventListener('beforeinstallprompt', onPrompt)
+    // 설치가 끝나면 배너를 내린다(다른 경로로 설치했을 때도 포함).
+    const onInstalled = () => setDeferred(null)
+    window.addEventListener('appinstalled', onInstalled)
     // iOS Safari는 이 이벤트가 없고 공유 메뉴로만 추가된다.
     if (isIos()) setIosHint(true)
-    return () => window.removeEventListener('beforeinstallprompt', onPrompt)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt)
+      window.removeEventListener('appinstalled', onInstalled)
+    }
   }, [])
 
   const dismiss = () => {
@@ -44,9 +50,17 @@ export default function PwaPrompts() {
 
   const install = async () => {
     if (!deferred) return
-    deferred.prompt()
-    await deferred.userChoice
-    setDeferred(null)
+    try {
+      deferred.prompt()
+      const { outcome } = await deferred.userChoice
+      // 설치를 수락했을 때만 배너를 내린다. 안드로이드에서는 뒤로가기나 스와이프로
+      // 시스템 대화상자가 쉽게 닫히는데, 그때 배너까지 없애면 beforeinstallprompt가
+      // 다시 오지 않아 새로고침 전까지 설치할 방법이 사라진다.
+      if (outcome === 'accepted') setDeferred(null)
+    } catch {
+      // prompt()는 이벤트당 한 번만 쓸 수 있다. 이미 소비된 이벤트면 버린다.
+      setDeferred(null)
+    }
   }
 
   // 업데이트 안내가 설치 안내보다 우선한다.
