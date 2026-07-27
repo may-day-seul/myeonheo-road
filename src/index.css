@@ -1613,3 +1613,15 @@ img {
   letter-spacing: -0.018em;
   word-break: keep-all;
 }
+
+/* 결과 화면의 오답 다시보기 — 홈으로 버튼과 구분되게 강조 */
+.review-btn {
+  border-color: rgba(255, 196, 46, 0.4);
+  background: rgba(255, 196, 46, 0.09);
+  color: var(--amber);
+}
+
+.review-btn:hover {
+  border-color: rgba(255, 196, 46, 0.65);
+  background: rgba(255, 196, 46, 0.14);
+}

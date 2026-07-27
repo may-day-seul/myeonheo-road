@@ -7,6 +7,7 @@ import Mock from './screens/Mock.jsx'
 import MockResult from './screens/MockResult.jsx'
 import Practical from './screens/Practical.jsx'
 import Areas from './screens/Areas.jsx'
+import WrongReview from './screens/WrongReview.jsx'
 import Placeholder from './screens/Placeholder.jsx'
 import {
   load,
@@ -33,6 +34,7 @@ export default function App() {
   const [quizTitle, setQuizTitle] = useState('오늘의 코스')
   const [results, setResults] = useState([])
   const [mock, setMock] = useState(null)
+  const [wrong, setWrong] = useState([])
 
   const goHome = () => setScreen('home')
 
@@ -97,6 +99,12 @@ export default function App() {
   const finishQuiz = (quizResults) => {
     record(quizResults)
     setResults(quizResults)
+    const byId = new Map(questions.map((q) => [q.i, q]))
+    setWrong(
+      quizResults
+        .filter((r) => !r.correct)
+        .map((r) => ({ q: byId.get(r.id), selected: r.selected ?? [] })),
+    )
     setScreen('result')
   }
 
@@ -106,6 +114,11 @@ export default function App() {
         id: q.i,
         correct: isCorrect(q, answers.get(q.i) ?? []),
       })),
+    )
+    setWrong(
+      questions
+        .filter((q) => !isCorrect(q, answers.get(q.i) ?? []))
+        .map((q) => ({ q, selected: answers.get(q.i) ?? [] })),
     )
     setMock({ answers, timedOut, summary: scoreMock(questions, answers) })
     setScreen('mock-result')
@@ -135,7 +148,12 @@ export default function App() {
       )}
 
       {screen === 'result' && (
-        <Result results={results} onRetry={startDaily} onHome={goHome} />
+        <Result
+          results={results}
+          onReview={() => setScreen('wrong-quiz')}
+          onRetry={startDaily}
+          onHome={goHome}
+        />
       )}
 
       {screen === 'mock' && (
@@ -153,10 +171,21 @@ export default function App() {
           answers={mock.answers}
           summary={mock.summary}
           timedOut={mock.timedOut}
+          onReview={() => setScreen('wrong-mock')}
           onRetry={startMock}
           onHome={goHome}
         />
       )}
+
+      {(screen === 'wrong-quiz' || screen === 'wrong-mock') &&
+        wrong.length > 0 && (
+          <WrongReview
+            items={wrong}
+            onBack={() =>
+              setScreen(screen === 'wrong-quiz' ? 'result' : 'mock-result')
+            }
+          />
+        )}
 
       {screen === 'areas' && (
         <Areas progress={progress} onStart={startArea} onBack={goHome} />

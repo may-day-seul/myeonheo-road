@@ -5,6 +5,7 @@ export default function MockResult({
   answers,
   summary,
   timedOut,
+  onReview,
   onRetry,
   onHome,
 }) {
@@ -86,6 +87,11 @@ export default function MockResult({
       </section>
 
       <div className="menu-list">
+        {correct.length < questions.length && (
+          <button className="btn-secondary center review-btn" onClick={onReview}>
+            틀린 {questions.length - correct.length}문항 다시보기
+          </button>
+        )}
         <button className="btn-primary" onClick={onRetry}>
           다시 응시하기
         </button>

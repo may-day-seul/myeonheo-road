@@ -22,7 +22,11 @@ export default function Quiz({ questions, title, onFinish, onExit }) {
 
   const commit = (sel) => {
     setGraded(true)
-    setResults((prev) => [...prev, { id: q.i, correct: isCorrect(q, sel) }])
+    // selected까지 남겨야 결과 화면에서 '내 선택 vs 정답'을 보여줄 수 있다.
+    setResults((prev) => [
+      ...prev,
+      { id: q.i, correct: isCorrect(q, sel), selected: sel },
+    ])
   }
 
   const pick = (n) => {

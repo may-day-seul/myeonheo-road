@@ -1,6 +1,6 @@
 const PASS_LINE = 60
 
-export default function Result({ results, onRetry, onHome }) {
+export default function Result({ results, onReview, onRetry, onHome }) {
   const total = results.length
   const correct = results.filter((r) => r.correct).length
   const score = total > 0 ? Math.round((correct / total) * 100) : 0
@@ -39,6 +39,11 @@ export default function Result({ results, onRetry, onHome }) {
       )}
 
       <div className="menu-list">
+        {wrongCount > 0 && (
+          <button className="btn-secondary center review-btn" onClick={onReview}>
+            틀린 {wrongCount}문항 다시보기
+          </button>
+        )}
         <button className="btn-primary" onClick={onRetry}>
           한 코스 더 달리기
         </button>
