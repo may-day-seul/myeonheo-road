@@ -3,14 +3,12 @@ import Header from './components/Header.jsx'
 import Home from './screens/Home.jsx'
 import Quiz from './screens/Quiz.jsx'
 import Result from './screens/Result.jsx'
+import Mock from './screens/Mock.jsx'
+import MockResult from './screens/MockResult.jsx'
+import Practical from './screens/Practical.jsx'
 import Placeholder from './screens/Placeholder.jsx'
 import { load, save, bumpStreak, effectiveStreak } from './lib/storage.js'
-import { pickDaily, pickReview } from './lib/quiz.js'
-
-const PLACEHOLDERS = {
-  practical: { icon: '🚙', title: '실기 체크리스트' },
-  mock: { icon: '⏱️', title: '실전 모의고사' },
-}
+import { pickDaily, pickReview, pickMock, scoreMock, isCorrect } from './lib/quiz.js'
 
 export default function App() {
   const [progress, setProgress] = useState(load)
@@ -19,8 +17,31 @@ export default function App() {
   const [questions, setQuestions] = useState([])
   const [quizTitle, setQuizTitle] = useState('오늘의 코스')
   const [results, setResults] = useState([])
+  const [mock, setMock] = useState(null)
 
   const goHome = () => setScreen('home')
+
+  // 푼 문항을 진행상황에 반영한다. 맞히면 오답노트에서 빠지고, 틀리면 들어간다.
+  const record = (entries) => {
+    const p = load()
+    const solved = new Set(p.solvedIds)
+    const wrong = new Set(p.wrongIds)
+    for (const r of entries) {
+      solved.add(r.id)
+      if (r.correct) wrong.delete(r.id)
+      else wrong.add(r.id)
+    }
+    const updated = bumpStreak({
+      ...p,
+      total: p.total + entries.length,
+      correct: p.correct + entries.filter((r) => r.correct).length,
+      solvedIds: [...solved],
+      wrongIds: [...wrong],
+    })
+    save(updated)
+    setProgress(updated)
+    return updated
+  }
 
   const startDaily = () => {
     setQuestions(pickDaily(progress, filter))
@@ -30,42 +51,40 @@ export default function App() {
 
   const startReview = () => {
     const qs = pickReview(progress)
-    if (qs.length === 0) {
-      setScreen('review-empty')
-      return
-    }
+    if (qs.length === 0) return setScreen('review-empty')
     setQuestions(qs)
     setQuizTitle('오답노트 복습')
     setScreen('quiz')
   }
 
+  const startMock = () => {
+    setQuestions(pickMock())
+    setMock(null)
+    setScreen('mock')
+  }
+
   const navigate = (target) => {
     if (target === 'quiz') return startDaily()
     if (target === 'review') return startReview()
+    if (target === 'mock') return startMock()
     setScreen(target)
   }
 
   const finishQuiz = (quizResults) => {
-    const p = load()
-    const solved = new Set(p.solvedIds)
-    const wrong = new Set(p.wrongIds)
-    for (const r of quizResults) {
-      solved.add(r.id)
-      // 다시 맞히면 오답노트에서 자동으로 빠진다.
-      if (r.correct) wrong.delete(r.id)
-      else wrong.add(r.id)
-    }
-    const updated = bumpStreak({
-      ...p,
-      total: p.total + quizResults.length,
-      correct: p.correct + quizResults.filter((r) => r.correct).length,
-      solvedIds: [...solved],
-      wrongIds: [...wrong],
-    })
-    save(updated)
-    setProgress(updated)
+    record(quizResults)
     setResults(quizResults)
     setScreen('result')
+  }
+
+  const submitMock = (answers, timedOut) => {
+    record(
+      questions.map((q) => ({
+        id: q.i,
+        correct: isCorrect(q, answers.get(q.i) ?? []),
+      })),
+    )
+    setMock({ answers, timedOut, summary: scoreMock(questions, answers) })
+    setScreen('mock-result')
   }
 
   return (
@@ -95,6 +114,34 @@ export default function App() {
         <Result results={results} onRetry={startDaily} onHome={goHome} />
       )}
 
+      {screen === 'mock' && (
+        <Mock
+          key={questions.map((q) => q.i).join('-')}
+          questions={questions}
+          onSubmit={submitMock}
+          onExit={goHome}
+        />
+      )}
+
+      {screen === 'mock-result' && mock && (
+        <MockResult
+          questions={questions}
+          answers={mock.answers}
+          summary={mock.summary}
+          timedOut={mock.timedOut}
+          onRetry={startMock}
+          onHome={goHome}
+        />
+      )}
+
+      {screen === 'practical' && (
+        <Practical
+          progress={progress}
+          onChange={setProgress}
+          onBack={goHome}
+        />
+      )}
+
       {screen === 'review-empty' && (
         <Placeholder
           icon="✨"
@@ -102,10 +149,6 @@ export default function App() {
           body="틀린 문항이 쌓이면 여기서 복습할 수 있어요."
           onBack={goHome}
         />
-      )}
-
-      {PLACEHOLDERS[screen] && (
-        <Placeholder {...PLACEHOLDERS[screen]} onBack={goHome} />
       )}
     </div>
   )

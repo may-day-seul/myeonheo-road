@@ -1114,3 +1114,344 @@ img {
 .btn-secondary.center {
   justify-content: center;
 }
+
+/* ---------- 모의고사 ---------- */
+.timer {
+  flex: none;
+  font-size: 13.5px;
+  font-weight: 760;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 11px;
+  transition:
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.timer.urgent {
+  color: #ffd6d3;
+  border-color: rgba(255, 95, 87, 0.5);
+  background: rgba(255, 95, 87, 0.14);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 95, 87, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(255, 95, 87, 0);
+  }
+}
+
+.tag.sheet-btn {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: var(--line-strong);
+  cursor: pointer;
+}
+
+.mock-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mock-nav .btn-primary,
+.mock-nav .btn-secondary {
+  margin-top: 0;
+}
+
+.mock-nav .btn-secondary:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mock-nav .btn-secondary:disabled:hover {
+  transform: none;
+  border-color: var(--line);
+  background: var(--surface);
+}
+
+.mock-note {
+  font-size: 11.5px;
+  font-weight: 450;
+  line-height: 1.6;
+  color: var(--dimmer);
+  text-align: center;
+  letter-spacing: -0.015em;
+  word-break: keep-all;
+}
+
+/* 답안지 / 확인 시트 */
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(6, 7, 10, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade 0.2s ease;
+}
+
+.sheet-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: 24px 24px 0 0;
+  padding: 20px 18px calc(22px + env(safe-area-inset-bottom));
+  animation: slideup 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideup {
+  from {
+    transform: translateY(18px);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  letter-spacing: -0.035em;
+}
+
+.sheet-head strong {
+  font-weight: 780;
+}
+
+.sheet-body {
+  font-size: 13.5px;
+  font-weight: 450;
+  line-height: 1.6;
+  color: var(--dim);
+  letter-spacing: -0.018em;
+  word-break: keep-all;
+}
+
+.sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  max-height: 42vh;
+  overflow-y: auto;
+}
+
+.sheet-grid .cell {
+  aspect-ratio: 1;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 640;
+  font-variant-numeric: tabular-nums;
+  color: var(--dimmer);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  transition:
+    color 0.15s,
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.sheet-grid .cell.done {
+  color: #14161b;
+  background: linear-gradient(140deg, #fff2cc, var(--amber));
+  border-color: transparent;
+}
+
+.sheet-grid .cell.cur {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.sheet-grid .cell.done.cur {
+  color: #14161b;
+}
+
+.sheet-inner .btn-primary,
+.sheet-inner .btn-secondary {
+  margin-top: 0;
+}
+
+/* 유형별 결과 */
+.type-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.type-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.type-name {
+  flex: none;
+  width: 56px;
+  font-size: 12.5px;
+  font-weight: 620;
+  letter-spacing: -0.03em;
+  color: var(--dim);
+}
+
+.type-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.type-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.type-fill.text {
+  background: linear-gradient(90deg, var(--cyan), #7ee8ff);
+}
+
+.type-fill.img {
+  background: linear-gradient(90deg, var(--violet), #b9a4ff);
+}
+
+.type-val {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  text-align: right;
+  min-width: 62px;
+}
+
+.type-val em {
+  display: block;
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 520;
+  color: var(--dimmer);
+}
+
+/* ---------- 실기 체크리스트 ---------- */
+.practical {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.practical-head {
+  padding: 4px 2px 0;
+}
+
+.check-card {
+  padding: 18px;
+}
+
+.check-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  border-radius: 13px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+
+.check:hover {
+  border-color: var(--line-strong);
+}
+
+.check.on {
+  background: rgba(52, 217, 154, 0.09);
+  border-color: rgba(52, 217, 154, 0.34);
+}
+
+.check .box {
+  flex: none;
+  width: 21px;
+  height: 21px;
+  margin-top: 1px;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0b0d12;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--line-strong);
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+
+.check.on .box {
+  background: var(--green);
+  border-color: transparent;
+}
+
+.check-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 640;
+  letter-spacing: -0.03em;
+}
+
+.check.on .check-text strong {
+  color: #d8fdee;
+}
+
+.check-text em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 450;
+  color: var(--dimmer);
+  margin-top: 2px;
+  letter-spacing: -0.015em;
+}
+
+.btn-secondary .badge.soft {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--dim);
+  box-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-secondary .note {
+  font-size: 11.5px;
+  font-weight: 520;
+  color: var(--dimmer);
+  letter-spacing: -0.02em;
+}

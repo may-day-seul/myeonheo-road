@@ -1,6 +1,18 @@
 import bank from '../data/bank.json'
 
 export const QUIZ_SIZE = 10
+export const PASS_SCORE = 60
+
+// 실전 모의고사: 40문항 40분
+export const MOCK_SIZE = 40
+export const MOCK_MINUTES = 40
+
+// 추정 배점 — 공단의 공식 배점표는 공개돼 있지 않다. 문장형보다 사진·일러스트형
+// 배점이 높다는 통설을 따라 근사한 값이며, 실제 시험 배점과 다를 수 있다.
+// 화면에도 '추정 배점'임을 표기한다.
+export const SCORE_WEIGHTS = { text: 2, img: 3 }
+
+export const weightOf = (q) => SCORE_WEIGHTS[q.t] ?? 2
 
 const byId = new Map(bank.map((q) => [q.i, q]))
 
@@ -33,6 +45,28 @@ export function pickDaily(progress, filter, size = QUIZ_SIZE) {
     picked.push(...filler.slice(0, size - picked.length))
   }
   return shuffle(picked)
+}
+
+// 모의고사는 실제 시험처럼 전 범위에서 무작위로 뽑는다(유형 필터·학습 이력 무시).
+export function pickMock(size = MOCK_SIZE) {
+  return shuffle(bank).slice(0, size)
+}
+
+// 가중 배점을 100점 만점으로 환산한다. 배점 구성이 회차마다 달라지므로
+// 획득 점수를 만점 대비 비율로 계산한다.
+export function scoreMock(questions, answers) {
+  let earned = 0
+  let total = 0
+  for (const q of questions) {
+    const w = weightOf(q)
+    total += w
+    if (isCorrect(q, answers.get(q.i) ?? [])) earned += w
+  }
+  return {
+    earned,
+    total,
+    score: total > 0 ? Math.round((earned / total) * 100) : 0,
+  }
 }
 
 export function pickReview(progress, size = QUIZ_SIZE) {

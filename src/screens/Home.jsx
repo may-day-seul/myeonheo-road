@@ -1,5 +1,8 @@
 import RoadProgress from '../components/RoadProgress.jsx'
+import { SECTIONS } from './Practical.jsx'
 import bank from '../data/bank.json'
+
+const PRACTICAL_TOTAL = SECTIONS.reduce((n, s) => n + s.items.length, 0)
 
 const FILTERS = [
   { id: 'all', label: '전체' },
@@ -8,9 +11,9 @@ const FILTERS = [
 ]
 
 const MENU = [
-  { id: 'review', icon: '📝', label: '오답노트 복습', badge: true },
+  { id: 'review', icon: '📝', label: '오답노트 복습' },
   { id: 'practical', icon: '🚙', label: '실기 체크리스트' },
-  { id: 'mock', icon: '⏱️', label: '실전 모의고사' },
+  { id: 'mock', icon: '⏱️', label: '실전 모의고사', note: '40문항 · 40분' },
 ]
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -24,6 +27,7 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
       : 0
   const conquered = progress.solvedIds.length
   const conqueredPct = Math.round((conquered / bank.length) * 100)
+  const practicalDone = progress.practicalDone.length
 
   return (
     <div className="home">
@@ -88,11 +92,16 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
             <span className="left">
               <span className="ico">{m.icon}</span>
               {m.label}
-              {m.badge && progress.wrongIds.length > 0 && (
+              {m.id === 'review' && progress.wrongIds.length > 0 && (
                 <span className="badge">{progress.wrongIds.length}</span>
               )}
+              {m.id === 'practical' && practicalDone > 0 && (
+                <span className="badge soft">
+                  {practicalDone}/{PRACTICAL_TOTAL}
+                </span>
+              )}
             </span>
-            <span className="chev">›</span>
+            {m.note ? <span className="note">{m.note}</span> : <span className="chev">›</span>}
           </button>
         ))}
       </nav>

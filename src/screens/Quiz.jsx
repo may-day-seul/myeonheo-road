@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import Lightbox from '../components/Lightbox.jsx'
-import { isCorrect, optionCount } from '../lib/quiz.js'
+import {
+  CIRCLED,
+  QuestionCard,
+  Options,
+} from '../components/QuestionBody.jsx'
+import { isCorrect } from '../lib/quiz.js'
 
-const CIRCLED = ['①', '②', '③', '④', '⑤']
 const NO_EXPLANATION = '해설이 제공되지 않는 문항입니다.'
 
 export default function Quiz({ questions, title, onFinish, onExit }) {
@@ -14,7 +18,6 @@ export default function Quiz({ questions, title, onFinish, onExit }) {
 
   const q = questions[idx]
   const multi = q.a.length === 2
-  const nOpts = optionCount(q)
   const isLast = idx + 1 >= questions.length
 
   const commit = (sel) => {
@@ -48,15 +51,7 @@ export default function Quiz({ questions, title, onFinish, onExit }) {
     setGraded(false)
   }
 
-  const optionClass = (n) => {
-    if (!graded) return selected.includes(n) ? 'opt selected' : 'opt'
-    if (q.a.includes(n)) return 'opt correct'
-    if (selected.includes(n)) return 'opt wrong'
-    return 'opt muted'
-  }
-
-  const answered = results[results.length - 1]
-  const wasCorrect = graded && answered?.correct
+  const wasCorrect = graded && results[results.length - 1]?.correct
 
   return (
     <div className="quiz">
@@ -67,7 +62,9 @@ export default function Quiz({ questions, title, onFinish, onExit }) {
         <div className="quiz-track">
           <div
             className="quiz-track-fill"
-            style={{ width: `${((idx + (graded ? 1 : 0)) / questions.length) * 100}%` }}
+            style={{
+              width: `${((idx + (graded ? 1 : 0)) / questions.length) * 100}%`,
+            }}
           />
         </div>
         <span className="quiz-count">
@@ -81,40 +78,8 @@ export default function Quiz({ questions, title, onFinish, onExit }) {
         {multi && <span className="tag multi">2개 선택</span>}
       </div>
 
-      <section className="card q-card">
-        {q.t === 'text' ? (
-          <p className="q-text">{q.q}</p>
-        ) : (
-          <>
-            <button
-              className="q-img"
-              onClick={() => setZoom(true)}
-              aria-label="문제 이미지 확대"
-            >
-              <img src={`/q/${q.i}.jpg`} alt={`${q.i}번 문항`} loading="lazy" />
-            </button>
-            <span className="q-img-hint">⤢ 이미지를 탭하면 크게 볼 수 있어요</span>
-          </>
-        )}
-      </section>
-
-      <div className="opts">
-        {Array.from({ length: nOpts }, (_, k) => k + 1).map((n) => (
-          <button
-            key={n}
-            className={optionClass(n)}
-            onClick={() => pick(n)}
-            disabled={graded}
-          >
-            <span className="opt-num">{CIRCLED[n - 1]}</span>
-            {q.t === 'text' && <span className="opt-text">{q.c[n - 1]}</span>}
-            {graded && q.a.includes(n) && <span className="opt-mark">✓</span>}
-            {graded && !q.a.includes(n) && selected.includes(n) && (
-              <span className="opt-mark">✕</span>
-            )}
-          </button>
-        ))}
-      </div>
+      <QuestionCard q={q} onZoom={() => setZoom(true)} />
+      <Options q={q} selected={selected} graded={graded} onPick={pick} />
 
       {multi && !graded && (
         <button
