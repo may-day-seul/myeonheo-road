@@ -40,6 +40,11 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // 첫 방문에도 서비스워커가 바로 페이지를 맡게 한다. 이게 없으면 한 번
+        // 새로고침하기 전까지는 제어되지 않아, 처음 들어온 사용자가 곧바로
+        // 오프라인으로 전환하면 아무것도 캐시에서 뜨지 않는다.
+        // skipWaiting은 켜지 않는다 — 새 버전은 여전히 사용자가 고른 시점에 적용된다.
+        clientsClaim: true,
         // 앱 셸과 문제은행만 미리 받는다. 카드 293장(9.4MB)과 폰트 조각 92개를
         // 통째로 선캐시하면 설치가 지나치게 무거워진다 — 아래에서 본 것만 캐시한다.
         globPatterns: ['**/*.{js,css,html,webmanifest}', 'assets/bank-*.json'],
