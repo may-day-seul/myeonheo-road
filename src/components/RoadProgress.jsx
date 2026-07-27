@@ -3,13 +3,14 @@ export default function RoadProgress({ current, total }) {
   return (
     <div className="road-progress">
       <div className="road">
+        <div className="fill" style={{ width: `${pct}%` }} />
         <div className="center-line" />
-        <span className="car" style={{ left: `${Math.max(4, pct)}%` }}>
+        <span className="car" style={{ left: `${Math.max(5, pct)}%` }}>
           🚗
         </span>
       </div>
       <span className="count">
-        {current.toLocaleString()}/{total.toLocaleString()}
+        <strong>{current.toLocaleString()}</strong>/{total.toLocaleString()}
       </span>
     </div>
   )

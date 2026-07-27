@@ -3,7 +3,8 @@ export default function Header({ streak }) {
   return (
     <header className="header">
       <div className="logo">
-        면허<span className="accent">로드</span>
+        <span className="mark">🛣️</span>
+        면허로드
       </div>
       <div className="streak-pill" aria-label={`연속 학습 ${streak}일`}>
         <span className={`lamp red ${streak >= 1 ? 'on' : ''}`} />
