@@ -2,7 +2,7 @@ import { allQuestions, getQuestion } from './bank.js'
 import { areaOf, areaQuestionIds, weakAreas } from './areas.js'
 
 export const QUIZ_SIZE = 10
-// 오늘의 퀴즈 10문항 중 취약 영역에서 채우는 몫
+// 오늘치 10문항 중 취약 영역에서 채우는 몫
 export const WEAK_SLOTS = 3
 export const PASS_SCORE = 60
 

@@ -41,11 +41,11 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
       <section className="card hero">
         <span className="today">● {dateLabel}</span>
         <h1 className="hero-title">
-          오늘의 코스,
+          오늘도 딴다,
           <br />
-          <span className="grad">출발할까요?</span>
+          <span className="grad">가볼까요?</span>
         </h1>
-        <p className="hero-sub">랜덤 10문항으로 하루 한 코스를 완주해요.</p>
+        <p className="hero-sub">하루 10문항씩, 합격까지 차곡차곡.</p>
         <div className="filter-row" role="group" aria-label="유형 필터">
           {FILTERS.map((f) => (
             <button
@@ -58,7 +58,7 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
           ))}
         </div>
         <button className="btn-primary" onClick={() => onNavigate('quiz')}>
-          오늘의 퀴즈 시작 →
+          오늘치 10문항 시작 →
         </button>
       </section>
 

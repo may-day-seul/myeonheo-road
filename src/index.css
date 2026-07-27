@@ -138,6 +138,10 @@ img {
   gap: 8px;
 }
 
+.header .logo .accent {
+  color: var(--amber);
+}
+
 .header .logo .mark {
   width: 26px;
   height: 26px;

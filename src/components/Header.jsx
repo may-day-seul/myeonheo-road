@@ -4,7 +4,10 @@ export default function Header({ streak }) {
     <header className="header">
       <div className="logo">
         <span className="mark">🛣️</span>
-        면허로드
+        {/* 헤더가 flex라 낱개 텍스트로 두면 단어 사이에도 gap이 붙는다 */}
+        <span className="wordmark">
+          오늘도 <span className="accent">딴다</span>
+        </span>
       </div>
       <div className="streak-pill" aria-label={`연속 학습 ${streak}일`}>
         <span className={`lamp red ${streak >= 1 ? 'on' : ''}`} />

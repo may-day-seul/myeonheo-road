@@ -22,19 +22,19 @@ export default function Result({ results, onReview, onRetry, onHome }) {
       <div className={`verdict big ${passed ? 'ok' : 'no'}`}>
         <span className="verdict-ico">{passed ? '🏁' : '🚧'}</span>
         <div>
-          <strong>{passed ? '합격선 통과!' : '합격선 미달'}</strong>
-          <p>합격 기준 {PASS_LINE}점 · 이번 코스 {score}점</p>
+          <strong>{passed ? '오늘도 땄다!' : '조금만 더'}</strong>
+          <p>합격 기준 {PASS_LINE}점 · 이번 회차 {score}점</p>
         </div>
       </div>
 
       {wrongCount > 0 ? (
         <section className="card note-card">
-          틀린 <strong>{wrongCount}문항</strong>을 오답노트에 저장했어요. 복습에서
-          다시 맞히면 목록에서 자동으로 빠져요.
+          틀린 <strong>{wrongCount}문항</strong>은 오답노트에 넣어뒀어요. 복습에서
+          다시 맞히면 목록에서 빠집니다.
         </section>
       ) : (
         <section className="card note-card">
-          전부 맞혔어요. 오답노트에 추가된 문항이 없어요.
+          전부 맞혔어요. 오답노트에 넣을 문항이 없습니다.
         </section>
       )}
 
@@ -45,7 +45,7 @@ export default function Result({ results, onReview, onRetry, onHome }) {
           </button>
         )}
         <button className="btn-primary" onClick={onRetry}>
-          한 코스 더 달리기
+          한 판 더
         </button>
         <button className="btn-secondary center" onClick={onHome}>
           홈으로

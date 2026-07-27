@@ -11,10 +11,10 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: '면허로드 — 2종보통 학과시험',
-        short_name: '면허로드',
+        name: '오늘도 딴다 — 2종보통 학과시험',
+        short_name: '오늘도 딴다',
         description:
-          '도로교통공단 학과시험 문제은행 1,000문항으로 매일 한 코스씩 학습하는 앱',
+          '도로교통공단 학과시험 문제은행 1,000문항으로 하루 10문항씩 학습하는 앱',
         lang: 'ko',
         start_url: '/',
         scope: '/',

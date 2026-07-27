@@ -44,7 +44,7 @@ export default function MockResult({
       <div className={`verdict big ${passed ? 'ok' : 'no'}`}>
         <span className="verdict-ico">{passed ? '🏁' : '🚧'}</span>
         <div>
-          <strong>{passed ? '합격선 통과!' : '합격선 미달'}</strong>
+          <strong>{passed ? '오늘도 땄다!' : '조금만 더'}</strong>
           <p>
             합격 기준 {PASS_SCORE}점
             {timedOut && ' · 시간 종료로 자동 제출됐어요'}
@@ -83,7 +83,7 @@ export default function MockResult({
       <section className="card note-card">
         배점은 <strong>추정치</strong>입니다. 공단이 공식 배점표를 공개하지 않아
         문장형 {SCORE_WEIGHTS.text}점·이미지형 {SCORE_WEIGHTS.img}점으로 근사했고,
-        실제 시험 점수와 다를 수 있어요. 틀린 문항은 오답노트에 저장했습니다.
+        실제 시험 점수와 다를 수 있어요. 틀린 문항은 오답노트에 넣어뒀습니다.
       </section>
 
       <div className="menu-list">
@@ -93,7 +93,7 @@ export default function MockResult({
           </button>
         )}
         <button className="btn-primary" onClick={onRetry}>
-          다시 응시하기
+          한 판 더 응시
         </button>
         <button className="btn-secondary center" onClick={onHome}>
           홈으로

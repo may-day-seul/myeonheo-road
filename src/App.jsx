@@ -33,7 +33,7 @@ export default function App() {
   const [screen, setScreen] = useState('home')
   const [filter, setFilter] = useState('all')
   const [questions, setQuestions] = useState([])
-  const [quizTitle, setQuizTitle] = useState('오늘의 코스')
+  const [quizTitle, setQuizTitle] = useState('오늘치 10문항')
   const [results, setResults] = useState([])
   const [mock, setMock] = useState(null)
   const [wrong, setWrong] = useState([])
@@ -77,7 +77,7 @@ export default function App() {
 
   const startDaily = () => {
     setQuestions(pickDaily(progress, filter))
-    setQuizTitle('오늘의 코스')
+    setQuizTitle('오늘치 10문항')
     setScreen('quiz')
   }
 
