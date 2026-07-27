@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header.jsx'
 import Home from './screens/Home.jsx'
 import Quiz from './screens/Quiz.jsx'
@@ -25,6 +25,7 @@ import {
   isCorrect,
 } from './lib/quiz.js'
 import { areaName } from './lib/areas.js'
+import { loadBank } from './lib/bank.js'
 
 export default function App() {
   const [progress, setProgress] = useState(load)
@@ -35,6 +36,18 @@ export default function App() {
   const [results, setResults] = useState([])
   const [mock, setMock] = useState(null)
   const [wrong, setWrong] = useState([])
+  // 문제은행은 별도 에셋이라 셸을 먼저 그리고 뒤이어 받아온다.
+  const [bankState, setBankState] = useState('loading')
+
+  useEffect(() => {
+    let alive = true
+    loadBank()
+      .then(() => alive && setBankState('ready'))
+      .catch(() => alive && setBankState('error'))
+    return () => {
+      alive = false
+    }
+  }, [])
 
   const goHome = () => setScreen('home')
 
@@ -122,6 +135,39 @@ export default function App() {
     )
     setMock({ answers, timedOut, summary: scoreMock(questions, answers) })
     setScreen('mock-result')
+  }
+
+  if (bankState !== 'ready') {
+    return (
+      <div className="container">
+        <Header streak={effectiveStreak(progress)} />
+        <div className="placeholder">
+          {bankState === 'loading' ? (
+            <>
+              <div className="big">🛣️</div>
+              <div>문제은행을 불러오는 중이에요…</div>
+            </>
+          ) : (
+            <>
+              <div className="big">⚠️</div>
+              <div>
+                <strong style={{ color: 'var(--text)' }}>
+                  문제를 불러오지 못했어요
+                </strong>
+                <br />
+                네트워크를 확인하고 다시 시도해 주세요.
+              </div>
+              <button
+                className="btn-back"
+                onClick={() => window.location.reload()}
+              >
+                다시 시도
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    )
   }
 
   return (

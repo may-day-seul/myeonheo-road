@@ -1,4 +1,4 @@
-import bank from '../data/bank.json'
+import { allQuestions, getQuestion } from './bank.js'
 import { areaOf, areaQuestionIds, weakAreas } from './areas.js'
 
 export const QUIZ_SIZE = 10
@@ -17,9 +17,7 @@ export const SCORE_WEIGHTS = { text: 2, img: 3 }
 
 export const weightOf = (q) => SCORE_WEIGHTS[q.t] ?? 2
 
-const byId = new Map(bank.map((q) => [q.i, q]))
-
-export const getQuestion = (id) => byId.get(id)
+export { getQuestion }
 
 function shuffle(arr) {
   const a = [...arr]
@@ -49,7 +47,7 @@ function byPriority(pool, progress) {
 // 아직 풀지 않은 문항을 먼저 소진해 1,000문항을 한 바퀴 돌게 하되,
 // 취약 영역이 드러났으면 그 영역에서 WEAK_SLOTS만큼 먼저 채운다.
 export function pickDaily(progress, filter, size = QUIZ_SIZE) {
-  const pool = applyFilter(bank, filter)
+  const pool = applyFilter(allQuestions(), filter)
   const picked = []
   const taken = new Set()
 
@@ -75,7 +73,7 @@ export function pickDaily(progress, filter, size = QUIZ_SIZE) {
 // 특정 영역만 출제한다. 틀린 적 있는 문항과 미출제 문항을 먼저 보여준다.
 export function pickArea(progress, code, size = QUIZ_SIZE) {
   const ids = new Set(areaQuestionIds(code))
-  const pool = bank.filter((q) => ids.has(q.i))
+  const pool = allQuestions().filter((q) => ids.has(q.i))
   const attempts = progress.attempts ?? {}
   const solved = new Set(progress.solvedIds)
   const missed = pool.filter((q) => (attempts[q.i]?.w ?? 0) > 0)
@@ -89,7 +87,7 @@ export function pickArea(progress, code, size = QUIZ_SIZE) {
 
 // 모의고사는 실제 시험처럼 전 범위에서 무작위로 뽑는다(유형 필터·학습 이력 무시).
 export function pickMock(size = MOCK_SIZE) {
-  return shuffle(bank).slice(0, size)
+  return shuffle(allQuestions()).slice(0, size)
 }
 
 // 가중 배점을 100점 만점으로 환산한다. 배점 구성이 회차마다 달라지므로

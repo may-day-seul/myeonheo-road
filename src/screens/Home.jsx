@@ -1,7 +1,7 @@
 import RoadProgress from '../components/RoadProgress.jsx'
 import { SECTIONS } from './Practical.jsx'
 import { MIN_ATTEMPTS, weakAreas } from '../lib/areas.js'
-import bank from '../data/bank.json'
+import { TOTAL_QUESTIONS } from '../lib/bank.js'
 
 const PRACTICAL_TOTAL = SECTIONS.reduce((n, s) => n + s.items.length, 0)
 
@@ -28,7 +28,7 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
       ? Math.round((progress.correct / progress.total) * 100)
       : 0
   const conquered = progress.solvedIds.length
-  const conqueredPct = Math.round((conquered / bank.length) * 100)
+  const conqueredPct = Math.round((conquered / TOTAL_QUESTIONS) * 100)
   const practicalDone = progress.practicalDone.length
   const weak = weakAreas(progress, 3)
   const attemptCount = Object.values(progress.attempts ?? {}).reduce(
@@ -80,13 +80,13 @@ export default function Home({ progress, filter, onFilterChange, onNavigate }) {
       <section className="card">
         <div className="section-title">
           문제은행 정복률
-          <span className="sub">전체 {bank.length.toLocaleString()}문항</span>
+          <span className="sub">전체 {TOTAL_QUESTIONS.toLocaleString()}문항</span>
         </div>
         <div className="pct-big">
           {conqueredPct}
           <span>%</span>
         </div>
-        <RoadProgress current={conquered} total={bank.length} />
+        <RoadProgress current={conquered} total={TOTAL_QUESTIONS} />
       </section>
 
       <section className="card">

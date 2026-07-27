@@ -1,4 +1,3 @@
-import bank from '../data/bank.json'
 import categories from '../data/categories.json'
 
 // 영역은 bank.json에 없어 문항 텍스트로 분류한 값이다(tools/build-categories.py).
@@ -22,8 +21,10 @@ export const areaOf = (id) => categories[id] ?? 'etc'
 export const areaName = (code) =>
   AREAS.find((a) => a.code === code)?.name ?? code
 
+// categories.json이 1,000문항 전부의 영역을 담고 있어 bank.json 없이 만들 수 있다.
 const idsByArea = new Map(AREAS.map((a) => [a.code, []]))
-for (const q of bank) idsByArea.get(areaOf(q.i))?.push(q.i)
+for (const id of Object.keys(categories))
+  idsByArea.get(categories[id])?.push(Number(id))
 
 export const areaQuestionIds = (code) => idsByArea.get(code) ?? []
 
