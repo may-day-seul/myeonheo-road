@@ -20,8 +20,8 @@
   --radius: 22px;
   --radius-sm: 14px;
   --font:
-    'IBM Plex Sans KR', 'Pretendard', system-ui, 'Apple SD Gothic Neo',
-    sans-serif;
+    'Pretendard Variable', 'Pretendard', 'Paperlogy', 'Noto Sans KR',
+    system-ui, 'Apple SD Gothic Neo', sans-serif;
 }
 
 * {
@@ -38,10 +38,15 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font);
+  font-weight: 400;
+  font-optical-sizing: auto;
   line-height: 1.5;
   min-height: 100dvh;
-  letter-spacing: -0.011em;
+  letter-spacing: -0.014em;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* 배경 앰비언트 글로우 + 그레인 */
@@ -126,8 +131,8 @@ img {
 
 .header .logo {
   font-size: 19px;
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-weight: 820;
+  letter-spacing: -0.045em;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -184,6 +189,7 @@ img {
 .streak-pill .days {
   font-size: 12px;
   font-weight: 700;
+  letter-spacing: -0.03em;
   color: var(--text);
   margin-left: 2px;
   font-variant-numeric: tabular-nums;
@@ -244,7 +250,7 @@ img {
 
 .road-progress .count {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 560;
   color: var(--dim);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -253,6 +259,7 @@ img {
 
 .road-progress .count strong {
   color: var(--text);
+  font-weight: 760;
   font-size: 15px;
 }
 
@@ -299,8 +306,8 @@ img {
   gap: 6px;
   font-size: 11.5px;
   color: var(--amber);
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: 650;
+  letter-spacing: 0.005em;
   background: rgba(255, 196, 46, 0.1);
   border: 1px solid rgba(255, 196, 46, 0.22);
   border-radius: 999px;
@@ -308,10 +315,10 @@ img {
 }
 
 .hero-title {
-  font-size: 27px;
-  font-weight: 800;
-  letter-spacing: -0.045em;
-  line-height: 1.22;
+  font-size: 28px;
+  font-weight: 860;
+  letter-spacing: -0.052em;
+  line-height: 1.2;
   margin-top: 14px;
 }
 
@@ -324,9 +331,10 @@ img {
 
 .hero-sub {
   font-size: 13.5px;
+  font-weight: 450;
   color: var(--dim);
   margin-top: 8px;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .btn-primary {
@@ -335,8 +343,8 @@ img {
   background: linear-gradient(140deg, var(--amber), var(--amber-deep));
   color: #14161b;
   font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-weight: 780;
+  letter-spacing: -0.035em;
   border-radius: 16px;
   padding: 16px;
   margin-top: 16px;
@@ -375,7 +383,7 @@ img {
   flex: 1;
   position: relative;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 620;
   color: var(--dim);
   border-radius: 999px;
   padding: 8px 0;
@@ -433,8 +441,8 @@ img {
 
 .stats .value {
   font-size: 23px;
-  font-weight: 800;
-  letter-spacing: -0.05em;
+  font-weight: 780;
+  letter-spacing: -0.055em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -442,8 +450,8 @@ img {
   font-size: 11.5px;
   color: var(--dimmer);
   margin-top: 3px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-weight: 520;
+  letter-spacing: -0.015em;
 }
 
 /* 섹션 */
@@ -452,21 +460,21 @@ img {
   align-items: baseline;
   justify-content: space-between;
   font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 680;
+  letter-spacing: -0.035em;
   margin-bottom: 14px;
 }
 
 .section-title .sub {
-  font-weight: 600;
+  font-weight: 520;
   font-size: 11.5px;
   color: var(--dimmer);
 }
 
 .pct-big {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.06em;
   line-height: 1;
   margin-bottom: 12px;
   font-variant-numeric: tabular-nums;
@@ -475,7 +483,7 @@ img {
 .pct-big span {
   font-size: 14px;
   color: var(--dim);
-  font-weight: 700;
+  font-weight: 620;
   margin-left: 4px;
   letter-spacing: -0.02em;
 }
@@ -499,8 +507,8 @@ img {
   border-radius: var(--radius-sm);
   padding: 15px 17px;
   font-size: 14.5px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-weight: 640;
+  letter-spacing: -0.035em;
   box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.055) inset;
   transition:
     transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
@@ -537,7 +545,7 @@ img {
 
 .btn-secondary .badge {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 760;
   color: #fff;
   background: linear-gradient(140deg, #ff6b62, var(--red));
   border-radius: 999px;
@@ -559,10 +567,11 @@ img {
 .footer {
   margin-top: 14px;
   font-size: 10.5px;
+  font-weight: 450;
   color: var(--dimmer);
   text-align: center;
-  line-height: 1.75;
-  letter-spacing: -0.005em;
+  line-height: 1.8;
+  letter-spacing: -0.01em;
 }
 
 /* ---------- placeholder ---------- */
@@ -584,9 +593,9 @@ img {
 
 .btn-back {
   color: var(--text);
-  font-weight: 700;
+  font-weight: 640;
   font-size: 13.5px;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   padding: 10px 20px;
   background: var(--surface);
   border: 1px solid var(--line);
