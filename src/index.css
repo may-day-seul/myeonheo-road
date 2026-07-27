@@ -1625,3 +1625,60 @@ img {
   border-color: rgba(255, 196, 46, 0.65);
   background: rgba(255, 196, 46, 0.14);
 }
+
+/* ---------- PWA 설치·업데이트 안내 ---------- */
+.pwa-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 11px 12px 11px 14px;
+  border-radius: 14px;
+  background: rgba(255, 196, 46, 0.1);
+  border: 1px solid rgba(255, 196, 46, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: rise 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pwa-text {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #ffe6ac;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.pwa-text b {
+  font-weight: 760;
+  color: var(--amber);
+}
+
+.pwa-action {
+  flex: none;
+  font-size: 12.5px;
+  font-weight: 780;
+  letter-spacing: -0.03em;
+  color: #14161b;
+  background: linear-gradient(140deg, #fff2cc, var(--amber));
+  border-radius: 999px;
+  padding: 7px 14px;
+}
+
+.pwa-close {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: var(--dim);
+  border-radius: 50%;
+}
+
+.pwa-close:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Header from './components/Header.jsx'
+import PwaPrompts from './components/PwaPrompts.jsx'
 import Home from './screens/Home.jsx'
 import Quiz from './screens/Quiz.jsx'
 import Result from './screens/Result.jsx'
@@ -140,6 +141,7 @@ export default function App() {
   if (bankState !== 'ready') {
     return (
       <div className="container">
+        <PwaPrompts />
         <Header streak={effectiveStreak(progress)} />
         <div className="placeholder">
           {bankState === 'loading' ? (
@@ -172,6 +174,7 @@ export default function App() {
 
   return (
     <div className="container">
+      <PwaPrompts />
       <Header streak={effectiveStreak(progress)} />
 
       {screen === 'home' && (
